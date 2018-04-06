@@ -6,6 +6,11 @@ echo "First argument should be the path to the GFF3 file to process"
 exit
 fi
 
+if [ ! -f "Ppyr_Genome_release.fa" ]; then
+    echo "Ppyr_Genome_release.fa not found. Please symlink the most recent P. pyralis genome release to this file"
+    exit
+fi
+
 BASE=$(basename $1)
 BASE=${BASE%.gff3}
 
@@ -22,7 +27,7 @@ echo "Extracting gene features..."
 gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -seqfile Ppyr_Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" > ${BASE}.gene.fa
 
 echo "Sorting with igvtools..."
-/Applications/IGVTools/igvtools sort tmp.gt.gff3 tmp.gt.igv.gff3
+igvtools sort tmp.gt.gff3 tmp.gt.igv.gff3
 echo "Overwriting original file with sorted version..."
 mv -f tmp.gt.igv.gff3 $1
 rm -f tmp.gt.gff3
