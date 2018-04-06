@@ -10,7 +10,8 @@ This GIT repository is meant to keep track of any changes, and hopefully have a 
 (Executable from your local command line)
 
 * [gt](http://genometools.org/index.html)
-* igvtools (bundled as apart of [IGV](https://software.broadinstitute.org/software/igv/home))
+* [igvtools](https://software.broadinstitute.org/software/igv/download) (also available in [IGV](https://software.broadinstitute.org/software/igv/home) GUI)
+* [seqkit](https://github.com/shenwei356/seqkit)
 
 ### Reporting gene model problems
 
