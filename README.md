@@ -6,6 +6,8 @@ Geneset version: PPYR_OGS1.0
 
 This GIT repository is meant to keep track of any changes, and hopefully have a useful commit log which describes what changes occured.
 
+Also see: [fireflybase.org](http://www.fireflybase.org)
+
 ### Dependencies
 (Executable from your local command line)
 
