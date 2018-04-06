@@ -40,4 +40,4 @@ Get a proper relational database ala [Chado](http://gmod.org/wiki/Chado_-_Gettin
 License:
 [CC BY-NC-SA 4.0 International](License.md) - [Human readable summary](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
-<img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png" alt="Drawing" style="width: 150px;"/>
+<img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png" alt="Drawing" style="width: 100px;"/>
