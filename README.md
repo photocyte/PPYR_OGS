@@ -12,6 +12,7 @@ This GIT repository is meant to keep track of any changes, and hopefully have a 
 * [gt](http://genometools.org/index.html)
 * [igvtools](https://software.broadinstitute.org/software/igv/download) (also available in [IGV](https://software.broadinstitute.org/software/igv/home) GUI)
 * [seqkit](https://github.com/shenwei356/seqkit)
+* [gffutils](http://daler.github.io/gffutils/installation.html)
 
 ### Reporting gene model problems
 
