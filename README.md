@@ -1,4 +1,4 @@
-## *Photinus pyralis* geneset
+## *Photinus pyralis* Official Geneset
 This is the Official Geneset (OGS) for [*Photinus pyralis* (Big Dipper Firefly)](https://en.wikipedia.org/wiki/Photinus_pyralis)
 
 As reported in this preprint: [https://www.biorxiv.org/content/early/2018/02/25/237586](https://www.biorxiv.org/content/early/2018/02/25/237586)
@@ -33,4 +33,11 @@ Report issues [here](https://github.com/photocyte/PPYR_OGS/issues)
 
 ### Future
  
-Get a proper relational database ala [Chado](http://gmod.org/wiki/Chado_-_Getting_Started), or a collaborative GUI editing interface, ala [Apollo](http://genomearchitect.github.io).
+Get a proper relational database ala [Chado](http://gmod.org/wiki/Chado_-_Getting_Started), and/or a collaborative GUI editing interface, ala [Apollo](http://genomearchitect.github.io).
+
+### License
+
+License:
+[CC BY-NC-SA 4.0 International](License.md) - [Human readable summary](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+<img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png" alt="Drawing" style="width: 150px;"/>

@@ -18,13 +18,13 @@ echo "Sorting with gt..."
 gt gff3 -tidy -sort -retainids $1 > tmp.gt.gff3
 
 echo "Extracting CDS features..."
-gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -seqfile Ppyr_Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" > ${BASE}.CDS.fa
+gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -seqfile Ppyr_Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.CDS.fa.gz
 echo "Extracting peptide features..."
-gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -translate -gcode 1 -seqfile Ppyr_Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" > ${BASE}.pep.fa
+gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -translate -gcode 1 -seqfile Ppyr_Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.pep.fa.gz
 echo "Extracting mRNA features..."
-gt extractfeat -join -seqid -usedesc -retainids -coords -type mRNA -seqfile Ppyr_Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" > ${BASE}.mRNA.fa
+gt extractfeat -join -seqid -usedesc -retainids -coords -type mRNA -seqfile Ppyr_Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.mRNA.fa.gz
 echo "Extracting gene features..."
-gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -seqfile Ppyr_Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" > ${BASE}.gene.fa
+gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -seqfile Ppyr_Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.gene.fa.gz
 
 echo "Sorting with igvtools..."
 igvtools sort tmp.gt.gff3 tmp.gt.igv.gff3
