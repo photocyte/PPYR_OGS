@@ -10,6 +10,9 @@ This GIT repository is meant to keep track of any changes to the OGS, and hopefu
 
 Also see: [fireflybase.org](http://www.fireflybase.org)
 
+### Where can I download an official version of the data?
+See [Releases](https://github.com/photocyte/PPYR_OGS/releases)
+
 ### Dependencies
 (Executable from your local command line)
 
