@@ -29,7 +29,7 @@ Report issues [here](https://github.com/photocyte/PPYR_OGS/issues)
 
  1. Fork this repository
  2. Download and edit the [PPYR_OGS*.gff3](./PPYR_OGS1.0.gff3) file
- 3. Sort the GFF3 file and regenerate dependent files (CDS, mRNA, peptide) files using the [sort-and-regenerate-OGS-GFF.sh](sort-and-regenerate-OGS-GFF.sh) script.
+ 3. Sort the GFF3 file and regenerate dependent files (CDS, mRNA, peptide) files using the [utility_scripts/sort-and-regenerate-OGS-GFF.sh](utility_scripts/sort-and-regenerate-OGS-GFF.sh) script.
  4. Commit your changes back to your repository, with an informative message for the changes that were made
  5. Submit a pull request to this repository
  6. If all looks good I'll merge the pull request
