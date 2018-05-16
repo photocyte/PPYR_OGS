@@ -19,6 +19,7 @@ BASE=${BASE%.gff3}
 
 echo "Sorting with gt..."
 gt gff3 -tidy -sort -retainids $1 > tmp.gt.gff3
+echo "Done sorting."
 
 echo "Extracting CDS features..."
 gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -seqfile Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.CDS.fa.gz
