@@ -9,8 +9,8 @@ echo "The naming of the GFF3 should be in the style PPYR_OGS1.0.gff3, where PPYR
 exit
 fi
 
-if [ ! -f "Ppyr_Genome_release.fa" ]; then
-    echo "Ppyr_Genome_release.fa not found. Please symlink the most recent/relevant genome release to this file"
+if [ ! -f "Genome_release.fa" ]; then
+    echo "Genome_release.fa not found. Please symlink the most recent/relevant genome release to this file. This should be the FASTA file which the GFF3 file is assosciated with"
     exit
 fi
 
@@ -21,13 +21,13 @@ echo "Sorting with gt..."
 gt gff3 -tidy -sort -retainids $1 > tmp.gt.gff3
 
 echo "Extracting CDS features..."
-gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -seqfile Ppyr_Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.CDS.fa.gz
+gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -seqfile Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.CDS.fa.gz
 echo "Extracting peptide features..."
-gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -translate -gcode 1 -seqfile Ppyr_Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.pep.fa.gz
+gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -translate -gcode 1 -seqfile Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.pep.fa.gz
 echo "Extracting mRNA features..."
-gt extractfeat -join -seqid -usedesc -retainids -coords -type mRNA -seqfile Ppyr_Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.mRNA.fa.gz
+gt extractfeat -join -seqid -usedesc -retainids -coords -type mRNA -seqfile Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.mRNA.fa.gz
 echo "Extracting gene features..."
-gt extractfeat -join -seqid -usedesc -retainids -coords -type gene -seqfile Ppyr_Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.gene.fa.gz
+gt extractfeat -join -seqid -usedesc -retainids -coords -type gene -seqfile Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.gene.fa.gz
 
 echo "Sorting with igvtools..."
 igvtools sort tmp.gt.gff3 tmp.gt.igv.gff3
