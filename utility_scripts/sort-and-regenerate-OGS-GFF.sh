@@ -1,6 +1,6 @@
 #! /bin/bash
 
-echo "This is a script intended to take a Official Gene Set file which is very nearly in a standardized format (e.g., you edited the existing OGS GFF3 file with a simple text editor), and reformat that GFF3 plus product the derivative FASTA files to ensure they are in a standardized format"
+echo "This is a script intended to take a Official Gene Set file which is very nearly in a standardized format (e.g., you edited the existing OGS GFF3 file with a simple text editor), and reformat that GFF3 plus produce the derivative FASTA files to ensure they are in a standardized format"
 
 if [ -z "$1" ] 
 then
@@ -28,6 +28,14 @@ echo "Extracting mRNA features..."
 gt extractfeat -join -seqid -usedesc -retainids -coords -type mRNA -seqfile Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.mRNA.fa.gz
 echo "Extracting gene features..."
 gt extractfeat -join -seqid -usedesc -retainids -coords -type gene -seqfile Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.gene.fa.gz
+
+echo "Recording FASTA file checksums..."
+rm -f fasta-checksums.txt
+echo "${BASE}.CDS.fa.gz" > fasta-checksums.txt
+./utility_scripts/checksum_fasta_files.sh ${BASE}.CDS.fa.gz >> fasta-checksums.txt
+./utility_scripts/checksum_fasta_files.sh ${BASE}.pep.fa.gz >> fasta-checksums.txt 
+./utility_scripts/checksum_fasta_files.sh ${BASE}.mRNA.fa.gz >> fasta-checksums.txt
+./utility_scripts/checksum_fasta_files.sh ${BASE}.gene.fa.gz >> fasta-checksums.txt
 
 echo "Sorting with igvtools..."
 igvtools sort tmp.gt.gff3 tmp.gt.igv.gff3
