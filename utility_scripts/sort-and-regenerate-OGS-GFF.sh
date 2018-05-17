@@ -33,13 +33,13 @@ gt extractfeat -join -seqid -usedesc -retainids -coords -type gene -seqfile Geno
 echo "Recording FASTA file checksums..."
 rm -f fasta-checksums.txt
 echo "${BASE}.CDS.fa.gz" > fasta-checksums.txt
-./utility_scripts/checksum_fasta_files.sh ${BASE}.CDS.fa.gz >> fasta-checksums.txt
+./utility_scripts/checksum_FASTA_files.sh ${BASE}.CDS.fa.gz >> fasta-checksums.txt
 echo "${BASE}.pep.fa.gz" >> fasta-checksums.txt
-./utility_scripts/checksum_fasta_files.sh ${BASE}.pep.fa.gz >> fasta-checksums.txt
+./utility_scripts/checksum_FASTA_files.sh ${BASE}.pep.fa.gz >> fasta-checksums.txt
 echo "${BASE}.mRNA.fa.gz" >> fasta-checksums.txt
-./utility_scripts/checksum_fasta_files.sh ${BASE}.mRNA.fa.gz >> fasta-checksums.txt
+./utility_scripts/checksum_FASTA_files.sh ${BASE}.mRNA.fa.gz >> fasta-checksums.txt
 echo "${BASE}.gene.fa.gz" >> fasta-checksums.txt
-./utility_scripts/checksum_fasta_files.sh ${BASE}.gene.fa.gz >> fasta-checksums.txt
+./utility_scripts/checksum_FASTA_files.sh ${BASE}.gene.fa.gz >> fasta-checksums.txt
 
 echo "Sorting with igvtools..."
 igvtools sort tmp.${BASE}.gt.gff3 tmp.${BASE}.gt.igv.gff3
