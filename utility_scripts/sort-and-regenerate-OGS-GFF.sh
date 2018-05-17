@@ -18,7 +18,7 @@ BASE=$(basename $1)
 BASE=${BASE%.gff3}
 
 echo "Sorting with gt..."
-gt gff3 -tidy -sort -retainids $1 > tmp.gt.gff3
+gt gff3 -tidy -sort -retainids $1 > tmp.${BASE}.gt.gff3
 echo "Done sorting."
 
 echo "Extracting CDS features..."
@@ -30,17 +30,9 @@ gt extractfeat -join -seqid -usedesc -retainids -coords -type mRNA -seqfile Geno
 echo "Extracting gene features..."
 gt extractfeat -join -seqid -usedesc -retainids -coords -type gene -seqfile Genome_release.fa tmp.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.gene.fa.gz
 
-echo "Recording FASTA file checksums..."
-rm -f fasta-checksums.txt
-echo "${BASE}.CDS.fa.gz" > fasta-checksums.txt
-./utility_scripts/checksum_fasta_files.sh ${BASE}.CDS.fa.gz >> fasta-checksums.txt
-./utility_scripts/checksum_fasta_files.sh ${BASE}.pep.fa.gz >> fasta-checksums.txt 
-./utility_scripts/checksum_fasta_files.sh ${BASE}.mRNA.fa.gz >> fasta-checksums.txt
-./utility_scripts/checksum_fasta_files.sh ${BASE}.gene.fa.gz >> fasta-checksums.txt
-
 echo "Sorting with igvtools..."
-igvtools sort tmp.gt.gff3 tmp.gt.igv.gff3
+igvtools sort tmp.${BASE}.gt.gff3 tmp.${BASE}.gt.igv.gff3
 echo "Overwriting original file with sorted version..."
-mv -f tmp.gt.igv.gff3 $1
-rm -f tmp.gt.gff3
+mv -f tmp.${BASE}.gt.igv.gff3 $1
+rm -f tmp.${BASE}.gt.gff3
 
