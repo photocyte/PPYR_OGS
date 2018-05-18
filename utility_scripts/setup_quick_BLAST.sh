@@ -3,4 +3,4 @@ mkdir quick_blast
 cp ./PPYR_OGS1.0*.fa.gz quick_blast
 cd quick_blast
 gunzip ./*.fa.gz
-yes | sequenceserver -d . -m 
+sequenceserver -d . -m 
