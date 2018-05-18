@@ -37,7 +37,11 @@ gt extractfeat -join -seqid -usedesc -retainids -coords -type gene -seqfile $2 t
 
 echo "Sorting with igvtools..."
 igvtools sort tmp.${BASE}.gt.gff3 tmp.${BASE}.gt.igv.gff3
-echo "Overwriting original file with sorted version..."
-mv -f tmp.${BASE}.gt.igv.gff3 $1
+echo "gzip compressing..."
+gzip tmp.${BASE}.gt.igv.gff3
+
+echo "Overwriting original file with sorted & compressed version..."
+mv -f tmp.${BASE}.gt.igv.gff3.gz $1
+rm -f tmp.${BASE}.gt.igv.gff3
 rm -f tmp.${BASE}.gt.gff3
 
