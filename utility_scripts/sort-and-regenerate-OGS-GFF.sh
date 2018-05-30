@@ -18,7 +18,7 @@ BASE=$(basename $1)
 BASE=${BASE%.gff3}
 
 echo "Sorting with gt..."
-gt gff3 -tidy -sort -retainids $1 > tmp.${BASE}.gt.gff3
+cat $1 | grep -v "#" | gt gff3 -tidy -sort -retainids $1 > tmp.${BASE}.gt.gff3
 echo "Done sorting."
 
 echo "Extracting CDS features..."
