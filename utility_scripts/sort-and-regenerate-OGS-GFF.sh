@@ -19,6 +19,9 @@ BASE=${BASE%.gff3}
 
 echo "Sorting with gt..."
 cat $1 | grep -v "#" | gt gff3 -tidy -sort -retainids $1 > tmp.${BASE}.gt.gff3
+echo "Done gt sorting."
+echo "Sorting with igvtools..."
+igvtools sort tmp.${BASE}.gt.gff3 tmp.${BASE}.gt.igv.gff3
 echo "Done sorting."
 
 echo "Extracting CDS features..."
@@ -41,9 +44,7 @@ echo "${BASE}.mRNA.fa.gz" >> fasta-checksums.txt
 echo "${BASE}.gene.fa.gz" >> fasta-checksums.txt
 ./utility_scripts/checksum_FASTA_files.sh ${BASE}.gene.fa.gz >> fasta-checksums.txt
 
-echo "Sorting with igvtools..."
-igvtools sort tmp.${BASE}.gt.gff3 tmp.${BASE}.gt.igv.gff3
-echo "Overwriting original file with sorted version..."
+echo "Overwriting original file with igvtools sorted version..."
 mv -f tmp.${BASE}.gt.igv.gff3 $1
 rm -f tmp.${BASE}.gt.gff3
 
