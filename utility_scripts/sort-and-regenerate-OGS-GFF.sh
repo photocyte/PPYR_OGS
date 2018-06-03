@@ -31,7 +31,7 @@ gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -translate -gc
 echo "Extracting mRNA features..."
 gt extractfeat -join -seqid -usedesc -retainids -coords -type mRNA -seqfile Genome_release.fa tmp.${BASE}.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.mRNA.fa.gz
 echo "Extracting gene features..."
-gt extractfeat -join -seqid -usedesc -retainids -coords -type gene -seqfile Genome_release.fa tmp.${BASE}.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.gene.fa.gz
+gt extractfeat -seqid -usedesc -retainids -coords -type gene -seqfile Genome_release.fa tmp.${BASE}.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.gene.fa.gz
 
 echo "Recording FASTA file checksums..."
 rm -f fasta-checksums.txt
