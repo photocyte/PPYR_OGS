@@ -1,0 +1,6 @@
+#! /bin/bash
+
+PROTEIN=PPYR_OGS1.1.pep.fa
+zcat ../../PPYR_OGS1.1.pep.fa.gz > $PROTEIN
+./eukaryotic_linear_motif_scan.py --elm_string TRG_PTS $PROTEIN > ${PROTEIN}.ELM.annotation.tsv
+rm -f $PROTEIN
