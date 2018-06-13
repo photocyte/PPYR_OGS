@@ -23,7 +23,7 @@ BASE=${BASE%.gff3}
 fi
 
 echo "Sorting with gt..."
-gt gff3 -tidy -sort -retainids $1 > tmp.${BASE}.gt.gff3
+cat $1 | grep -v "#" | gt gff3 -tidy -sort -retainids > tmp.${BASE}.gt.gff3
 echo "Done sorting."
 
 echo "Extracting CDS features..."
@@ -41,7 +41,7 @@ echo "gzip compressing..."
 gzip tmp.${BASE}.gt.igv.gff3
 
 echo "Overwriting original file with sorted & compressed version..."
-mv -f tmp.${BASE}.gt.igv.gff3.gz $1
+mv -f tmp.${BASE}.gt.igv.gff3.gz ${BASE}.gff3.gz
 rm -f tmp.${BASE}.gt.igv.gff3
 rm -f tmp.${BASE}.gt.gff3
 
