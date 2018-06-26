@@ -17,15 +17,15 @@ fi
 BASE=$(basename $1)
 if [ ${BASE: -3} == ".gz" ]
 then
-echo "Sorting with gt..."
-zcat $1 | grep -v "#" | gt gff3 -tidy -sort -retainids > tmp.${BASE}.gt.gff3
-echo "Done sorting."
-BASE=${BASE%.gff3.gz}
+  BASE=${BASE%.gff3.gz}
+  echo "Sorting with gt..."
+  zcat $1 | grep -v "#" | gt gff3 -tidy -sort -retainids > tmp.${BASE}.gt.gff3
+  echo "Done sorting."
 else
-echo "Sorting with gt..."
-cat $1 | grep -v "#" | gt gff3 -tidy -sort -retainids > tmp.${BASE}.gt.gff3
-echo "Done sorting."
-BASE=${BASE%.gff3}
+  BASE=${BASE%.gff3}
+  echo "Sorting with gt..."
+  cat $1 | grep -v "#" | gt gff3 -tidy -sort -retainids > tmp.${BASE}.gt.gff3
+  echo "Done sorting."
 fi
 
 echo "Extracting CDS features..."
