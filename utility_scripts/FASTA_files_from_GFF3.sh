@@ -17,14 +17,16 @@ fi
 BASE=$(basename $1)
 if [ ${BASE: -3} == ".gz" ]
 then
+echo "Sorting with gt..."
+zcat $1 | grep -v "#" | gt gff3 -tidy -sort -retainids > tmp.${BASE}.gt.gff3
+echo "Done sorting."
 BASE=${BASE%.gff3.gz}
 else
-BASE=${BASE%.gff3}
-fi
-
 echo "Sorting with gt..."
 cat $1 | grep -v "#" | gt gff3 -tidy -sort -retainids > tmp.${BASE}.gt.gff3
 echo "Done sorting."
+BASE=${BASE%.gff3}
+fi
 
 echo "Extracting CDS features..."
 gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -seqfile $2 tmp.${BASE}.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.CDS.fa.gz
