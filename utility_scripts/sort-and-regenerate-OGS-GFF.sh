@@ -29,7 +29,7 @@ gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -seqfile Genom
 echo "Extracting peptide features..."
 gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -translate -gcode 1 -seqfile Genome_release.fa tmp.${BASE}.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.pep.fa.gz
 echo "Extracting mRNA features..."
-gt extractfeat -join -seqid -usedesc -retainids -coords -type mRNA -seqfile Genome_release.fa tmp.${BASE}.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.mRNA.fa.gz
+gt extractfeat -join -seqid -usedesc -retainids -coords -type exon -seqfile Genome_release.fa tmp.${BASE}.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.mRNA.fa.gz
 echo "Extracting gene features..."
 gt extractfeat -seqid -usedesc -retainids -coords -type gene -seqfile Genome_release.fa tmp.${BASE}.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.gene.fa.gz
 
