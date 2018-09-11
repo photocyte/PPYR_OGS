@@ -40,7 +40,6 @@ Get a proper relational database ala [Chado](http://gmod.org/wiki/Chado_-_Gettin
 
 ### License
 
-License:
-[CC BY-NC-SA 4.0 International](License.md) - [Human readable summary](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+Data files (e.g. geneset .fa.gz files, gff3 files) are licensed under the [Creative Commons CC-BY-SA 4.0 International license](https://creativecommons.org/licenses/by-sa/4.0/).  Software (e.g. BASH scripts) is licensed under the [MIT license](https://opensource.org/licenses/MIT)
 
-<img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png" alt="Drawing" style="width: 100px;"/>
+<img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-sa.png" alt="Drawing" style="width: 100px;"/>
