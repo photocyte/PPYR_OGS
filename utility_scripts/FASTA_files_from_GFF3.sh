@@ -33,9 +33,9 @@ gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -seqfile $2 tm
 echo "Extracting peptide features..."
 gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -translate -gcode 1 -seqfile $2 tmp.${BASE}.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.pep.fa.gz
 echo "Extracting mRNA features..."
-gt extractfeat -join -seqid -usedesc -retainids -coords -type mRNA -seqfile $2 tmp.${BASE}.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.mRNA.fa.gz
+gt extractfeat -join -seqid -usedesc -retainids -coords -type exon -seqfile $2 tmp.${BASE}.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.mRNA.fa.gz
 echo "Extracting gene features..."
-gt extractfeat -join -seqid -usedesc -retainids -coords -type gene -seqfile $2 tmp.${BASE}.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.gene.fa.gz
+gt extractfeat -seqid -usedesc -retainids -coords -type gene -seqfile $2.fa tmp.${BASE}.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.gene.fa.gz
 
 echo "Sorting with igvtools..."
 igvtools sort tmp.${BASE}.gt.gff3 tmp.${BASE}.gt.igv.gff3
