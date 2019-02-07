@@ -20,9 +20,7 @@ BASE=$(basename $1)
 BASE=${BASE%.gff3}
 
 echo "Adding start/stop codons with GAG..."
-rm -rf gag_output
-mkfifo tmp0.gff3
-cat $1 | grep -v "stop_codon" | grep -v "start_codon" > tmp0.gff3 &
+cat $1 | grep -v "stop_codon" | grep -v "start_codon" > tmp0.gff3
 python2 /lab/solexa_weng/testtube/GAG-2.0.1/gag.py --fix_start_stop -f ./Genome_release.fa -g tmp0.gff3
 rm -f tmp0.gff3
 echo "Done adding codons"
