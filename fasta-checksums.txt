@@ -1,0 +1,8 @@
+PPYR_OGS1.1.CDS.fa.gz
+(stdin)= 946058026a0b6513c990de295aa753de
+PPYR_OGS1.1.pep.fa.gz
+(stdin)= fc69463eb58cfff0ee95197e870439fd
+PPYR_OGS1.1.mRNA.fa.gz
+(stdin)= 7c7b88341d68e45ac4361f9c2966f3a3
+PPYR_OGS1.1.gene.fa.gz
+(stdin)= 1c04b9ff7ce216541bf1bfc0449c19af
