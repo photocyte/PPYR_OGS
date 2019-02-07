@@ -2,6 +2,7 @@
 
 echo "This is a script intended to take a Official Gene Set file which is very nearly in a standardized format (e.g., you edited the existing OGS GFF3 file with a simple text editor), and reformat that GFF3 plus produce the derivative FASTA files to ensure they are in a standardized format"
 set -e
+set -o pipefail
 
 if [ -z "$1" ] 
 then
