@@ -19,15 +19,19 @@ fi
 BASE=$(basename $1)
 BASE=${BASE%.gff3}
 
-rm -rf gag_output
-echo "Adding start/stop codons with GAG..."
-cat $1 | grep -v "stop_codon" | grep -v "start_codon" > tmp0.gff3
-python2 /lab/solexa_weng/testtube/GAG-2.0.1/gag.py --fix_start_stop -f ./Genome_release.fa -g tmp0.gff3
-rm -f tmp0.gff3
-echo "Done adding codons"
+##Removed this, as GAG messed with my locus_tag attribute?
+#########################
+#rm -rf gag_output
+#echo "Adding start/stop codons with GAG..."
+#cat $1 | grep -v "stop_codon" | grep -v "start_codon" > tmp0.gff3
+#python2 /lab/solexa_weng/testtube/GAG-2.0.1/gag.py --fix_start_stop -f ./Genome_release.fa -g tmp0.gff3
+#rm -f tmp0.gff3
+#echo "Done adding codons"
+#########################
 
 echo "Sorting with gt..."
-cat gag_output/genome.gff gag_output/genome.ignored.gff | grep -v "#" | gt gff3 -tidy -sort -retainids > tmp.${BASE}.gt.gff3
+##cat gag_output/genome.gff gag_output/genome.ignored.gff | grep -v "#" | gt gff3 -tidy -sort -retainids > tmp.${BASE}.gt.gff3
+cat $1 | grep -v "#" | gt gff3 -tidy -sort -retainids > tmp.${BASE}.gt.gff3
 echo "Done gt sorting."
 echo "Sorting with igvtools..."
 igvtools sort tmp.${BASE}.gt.gff3 tmp.${BASE}.gt.igv.gff3
