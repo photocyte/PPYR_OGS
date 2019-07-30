@@ -5,4 +5,4 @@ PPYR_OGS1.1.pep.fa.gz
 PPYR_OGS1.1.mRNA.fa.gz
 (stdin)= 7c7b88341d68e45ac4361f9c2966f3a3
 PPYR_OGS1.1.gene.fa.gz
-(stdin)= 1c04b9ff7ce216541bf1bfc0449c19af
+(stdin)= 4861e144925e46f2a5ff9046f1544197
