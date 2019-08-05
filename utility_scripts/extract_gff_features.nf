@@ -86,7 +86,7 @@ extractedFeatureFastas.groupTuple().set{groupedFeatureFastas}
 fasta_name.combine(groupedFeatureFastas).set{totalGroup}
 
 process mergeFastas {
-publishDir ".",mode:copy
+publishDir ".",mode:"copy"
 conda "seqkit"
 input:
  set val(fn),val(featureType),file(allFiles) from totalGroup
