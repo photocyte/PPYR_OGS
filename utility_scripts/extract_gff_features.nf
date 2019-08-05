@@ -42,12 +42,12 @@ output:
 script:
 """
 gt seq ${chunk}
-chmod u-w ${chunk}.des ${chunk}.sds ${chunk}.md5 ${chunk}.esq ${chunk}.ssp ${chunk}.ois
+##Below was used for testing. Not needed anymore
+##chmod u-w ${chunk}.des ${chunk}.sds ${chunk}.md5 ${chunk}.esq ${chunk}.ssp ${chunk}.ois
 """
 }
 
 feature_types = Channel.from( "CDS", "pep", "mRNA", "gene" )
-
 feature_types.combine(indexedChunks).set{extractCmds}
 
 process extractFeatures {
@@ -95,6 +95,7 @@ output:
 tag "${fn}.${featureType}.fa.gz"
 script:
  """
- ls -1 | grep ".fa.gz" | xargs cat | seqkit sort -n | gzip > ${fn}.${featureType}.fa.gz
+ ls -f1 | grep ".fa.gz" > files.txt
+ cat files.txt | xargs cat | seqkit sort -n | gzip > ${fn}.${featureType}.fa.gz
  """
 }

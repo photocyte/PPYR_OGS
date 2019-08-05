@@ -43,6 +43,8 @@ mv Genome_release.fa.CDS.fa.gz ${BASE}.CDS.fa.gz
 mv Genome_release.fa.pep.fa.gz ${BASE}.pep.fa.gz
 mv Genome_release.fa.mRNA.fa.gz ${BASE}.mRNA.fa.gz
 mv Genome_release.fa.gene.fa.gz ${BASE}.gene.fa.gz
+mv work DELETEME
+rm -rf DELETEME &
 
 echo "Recording FASTA file checksums..."
 rm -f fasta-checksums.txt
