@@ -37,14 +37,18 @@ echo "Sorting with igvtools..."
 igvtools sort tmp.${BASE}.gt.gff3 tmp.${BASE}.gt.igv.gff3
 echo "Done sorting."
 
+echo "extracting features with nextflow extract_gene_features.nf"
 nextflow run extract_gene_features.nf --gff tmp.${BASE}.gt.gff3 --fasta Genome_release.fa -resume -with-trace --splitBy 5
 
 mv Genome_release.fa.CDS.fa.gz ${BASE}.CDS.fa.gz
 mv Genome_release.fa.pep.fa.gz ${BASE}.pep.fa.gz
 mv Genome_release.fa.mRNA.fa.gz ${BASE}.mRNA.fa.gz
 mv Genome_release.fa.gene.fa.gz ${BASE}.gene.fa.gz
+echo "Deleting nextflow work direction..."
 mv work DELETEME
-rm -rf DELETEME &
+mkdir tmp_empty_dir
+time rsync -a --delete tmp_empty_dir/ DELETEME/
+rm -rf DELETEME tmp_empty_dir
 
 echo "Recording FASTA file checksums..."
 rm -f fasta-checksums.txt
