@@ -1,14 +1,18 @@
-params.gff = ""
-params.fasta = ""
 params.splitBy = 5
 fasta_ch = Channel.fromPath(params.fasta)
 gff_ch = Channel.fromPath(params.gff)
 
-fasta_ch.into{fasta_ch1 ; fasta_ch2}
+fasta_ch.into{fasta_ch1 ; fasta_ch2 ; fasta_ch3}
+gff_ch.into{gff_ch1 ; gff_ch2}
+
+fasta_ch3.println()
+gff_ch2.println()
+//fasta_name = Channel.from("Genome_release.fa")
 fasta_name = Channel.from(fasta_ch2.getVal().toFile().name)
+
 fasta_ch1.splitFasta(by:params.splitBy,file:true).set{fastaChunks}
 
-fastaChunks.combine(gff_ch).set{combinedCmds}
+fastaChunks.combine(gff_ch1).set{combinedCmds}
 
 process filterGFF {
 conda "seqkit genometools"
@@ -86,7 +90,7 @@ extractedFeatureFastas.groupTuple().set{groupedFeatureFastas}
 fasta_name.combine(groupedFeatureFastas).set{totalGroup}
 
 process mergeFastas {
-publishDir ".",mode:"copy"
+//publishDir './' , mode:'copy'
 conda "seqkit"
 input:
  set val(fn),val(featureType),file(allFiles) from totalGroup
