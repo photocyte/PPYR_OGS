@@ -22,7 +22,7 @@ output:
 script:
 """
 mkdir split
-faSplit about ${fasta_ch1} 1000000 split/
+faSplit about ${fasta_ch1} 10000000 split/
 """
 }
 
