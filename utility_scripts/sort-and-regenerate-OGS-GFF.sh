@@ -38,7 +38,7 @@ igvtools sort tmp.${BASE}.gt.gff3 tmp.${BASE}.gt.igv.gff3
 echo "Done sorting."
 
 echo "extracting features with nextflow extract_gene_features.nf"
-nextflow run extract_gene_features.nf --gff tmp.${BASE}.gt.gff3 --fasta Genome_release.fa -resume -with-trace --splitBy 5
+nextflow run ./utility_scripts/extract_gene_features.nf --gff tmp.${BASE}.gt.gff3 --fasta Genome_release.fa -resume -with-trace --splitBy 5
 
 mv Genome_release.fa.CDS.fa.gz ${BASE}.CDS.fa.gz
 mv Genome_release.fa.pep.fa.gz ${BASE}.pep.fa.gz
