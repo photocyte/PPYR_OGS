@@ -10,12 +10,27 @@ gff_ch2.println()
 //fasta_name = Channel.from("Genome_release.fa")
 fasta_name = Channel.from(fasta_ch2.getVal().toFile().name)
 
-fasta_ch1.splitFasta(by:params.splitBy,file:true).set{fastaChunks}
 
-fastaChunks.combine(gff_ch1).set{combinedCmds}
+process splitGenome {
+cache 'deep'
+input:
+ file fasta_ch1
+ file gff_ch1
+output:
+ file "split/*.fa" into fastaChunks
+ file "${gff_ch1}" into gffCached
+script:
+"""
+mkdir split
+faSplit about ${fasta_ch1} 1000000 split/
+"""
+}
+
+fastaChunks.flatten().combine(gffCached).set{combinedCmds}
 
 process filterGFF {
 //conda "seqkit genometools"
+cache 'deep'
 input:
  set file(chunk),file(gff) from combinedCmds
 output:
@@ -24,7 +39,7 @@ tag "${chunk}"
 script:
 """
 seqkit fx2tab -n -i ${chunk} | tr -s "\t" > fasta_records.txt ##A trailing \t is actually important for accurate grepping
-cat ${gff} | grep -f fasta_records.txt | gt gff3 -tidy -sort -retainids > filtered.gff3
+grep -f fasta_records.txt ${gff} | gt gff3 -tidy -sort -retainids > filtered.gff3
 
 if [[ -s filtered.gff3 ]]
 then
@@ -46,6 +61,10 @@ output:
 script:
 """
 gt seq ${chunk}
+if [ ! -f "${chunk}.ssp" ]
+then
+    touch "${chunk}.ssp"
+fi
 ##Below was used for testing. Not needed anymore
 ##chmod u-w ${chunk}.des ${chunk}.sds ${chunk}.md5 ${chunk}.esq ${chunk}.ssp ${chunk}.ois
 """
