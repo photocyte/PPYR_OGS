@@ -37,14 +37,12 @@ echo "Sorting with igvtools..."
 igvtools sort tmp.${BASE}.gt.gff3 tmp.${BASE}.gt.igv.gff3
 echo "Done sorting."
 
-echo "Extracting CDS features..."
-gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -seqfile Genome_release.fa tmp.${BASE}.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.CDS.fa.gz
-echo "Extracting peptide features..."
-gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -translate -gcode 1 -seqfile Genome_release.fa tmp.${BASE}.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.pep.fa.gz
-echo "Extracting mRNA features..."
-gt extractfeat -join -seqid -usedesc -retainids -coords -type exon -seqfile Genome_release.fa tmp.${BASE}.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.mRNA.fa.gz
-echo "Extracting gene features..."
-gt extractfeat -seqid -usedesc -retainids -coords -type gene -seqfile Genome_release.fa tmp.${BASE}.gt.gff3 | seqkit replace -p "\(joined\)|\(translated\)" -r "" | gzip > ${BASE}.gene.fa.gz
+nextflow run extract_gene_features.nf --gff tmp.${BASE}.gt.gff3 --fasta Genome_release.fa -resume -with-trace --splitBy 5
+
+mv Genome_release.fa.CDS.fa.gz ${BASE}.CDS.fa.gz
+mv Genome_release.fa.pep.fa.gz ${BASE}.pep.fa.gz
+mv Genome_release.fa.mRNA.fa.gz ${BASE}.mRNA.fa.gz
+mv Genome_release.fa.gene.fa.gz ${BASE}.gene.fa.gz
 
 echo "Recording FASTA file checksums..."
 rm -f fasta-checksums.txt
