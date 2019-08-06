@@ -29,16 +29,11 @@ BASE=${BASE%.gff3}
 #echo "Done adding codons"
 #########################
 
-echo "Sorting with gt..."
-##cat gag_output/genome.gff gag_output/genome.ignored.gff | grep -v "#" | gt gff3 -tidy -sort -retainids > tmp.${BASE}.gt.gff3
-cat $1 | grep -v "#" | gt gff3 -tidy -sort -retainids > tmp.${BASE}.gt.gff3
-echo "Done gt sorting."
-echo "Sorting with igvtools..."
-igvtools sort tmp.${BASE}.gt.gff3 tmp.${BASE}.gt.igv.gff3
-echo "Done sorting."
+echo "gt and igv sorting"
+nextflow run ./utility_scripts/doubleSort.nf --gff $1 --base ${BASE} -resume
 
 echo "extracting features with nextflow extract_gene_features.nf"
-nextflow run ./utility_scripts/extract_gff_features.nf --gff tmp.${BASE}.gt.gff3 --fasta Genome_release.fa -resume -with-trace
+nextflow run ./utility_scripts/extract_gff_features.nf --gff tmp.${BASE}.gt.igv.gff3 --fasta Genome_release.fa -resume -with-trace
 
 echo "Renaming nextflow files..."
 mv Genome_release.fa.CDS.fa.gz ${BASE}.CDS.fa.gz
