@@ -56,6 +56,9 @@ echo "${BASE}.mRNA.fa.gz" >> fasta-checksums.txt
 ./utility_scripts/checksum_FASTA_files.sh ${BASE}.mRNA.fa.gz >> fasta-checksums.txt
 echo "${BASE}.gene.fa.gz" >> fasta-checksums.txt
 ./utility_scripts/checksum_FASTA_files.sh ${BASE}.gene.fa.gz >> fasta-checksums.txt
+echo "Genome_release.fa" >> fasta-checksums.txt
+./utility_scripts/checksum_FASTA_files.sh Genome_release.fa >> fasta-checksums.txt
+md5sum Genome_release.fa >> fasta-checksums.txt
 
 echo "Overwriting original file with igvtools sorted version..."
 mv -f tmp.${BASE}.gt.igv.gff3 $1
