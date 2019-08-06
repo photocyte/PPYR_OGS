@@ -48,15 +48,29 @@ mv Genome_release.fa.gene.fa.gz ${BASE}.gene.fa.gz
 
 echo "Recording FASTA file checksums..."
 rm -f fasta-checksums.txt
-echo "${BASE}.CDS.fa.gz" > fasta-checksums.txt
+echo "#########" > fasta-checksums.txt
+echo "${BASE}.CDS.fa.gz" >> fasta-checksums.txt
+seqkit stat ${BASE}.CDS.fa.gz >> fasta-checksums.txt
 ./utility_scripts/checksum_FASTA_files.sh ${BASE}.CDS.fa.gz >> fasta-checksums.txt
+md5sum ${BASE}.CDS.fa.gz >> fasta-checksums.txt
+echo "#########" >> fasta-checksums.txt
 echo "${BASE}.pep.fa.gz" >> fasta-checksums.txt
+seqkit stat ${BASE}.pep.fa.gz >> fasta-checksums.txt
 ./utility_scripts/checksum_FASTA_files.sh ${BASE}.pep.fa.gz >> fasta-checksums.txt
+md5sum ${BASE}.pep.fa.gz >> fasta-checksums.txt
+echo "#########" >> fasta-checksums.txt
 echo "${BASE}.mRNA.fa.gz" >> fasta-checksums.txt
+seqkit stat ${BASE}.mRNA.fa.gz >> fasta-checksums.txt
 ./utility_scripts/checksum_FASTA_files.sh ${BASE}.mRNA.fa.gz >> fasta-checksums.txt
+md5sum ${BASE}.mRNA.fa.gz >> fasta-checksums.txt
+echo "#########" >> fasta-checksums.txt
 echo "${BASE}.gene.fa.gz" >> fasta-checksums.txt
+seqkit stat ${BASE}.gene.fa.gz >> fasta-checksums.txt
 ./utility_scripts/checksum_FASTA_files.sh ${BASE}.gene.fa.gz >> fasta-checksums.txt
+md5sum ${BASE}.gene.fa.gz >> fasta-checksums.txt
+echo "#########" >> fasta-checksums.txt
 echo "Genome_release.fa" >> fasta-checksums.txt
+seqkit stat Genome_release.fa >> fasta-checksums.txt
 ./utility_scripts/checksum_FASTA_files.sh Genome_release.fa >> fasta-checksums.txt
 md5sum Genome_release.fa >> fasta-checksums.txt
 

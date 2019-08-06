@@ -1,11 +1,30 @@
+#########
 PPYR_OGS1.1.CDS.fa.gz
+file                   format  type  num_seqs     sum_len  min_len  avg_len  max_len
+PPYR_OGS1.1.CDS.fa.gz  FASTA   DNA     15,774  23,352,278      150  1,480.4   56,216
 (stdin)= d0d8d2ad5ac49a8869e3c7ddbba42e48
+60123505efe41e61852363873074afcc  PPYR_OGS1.1.CDS.fa.gz
+#########
 PPYR_OGS1.1.pep.fa.gz
+file                   format  type     num_seqs    sum_len  min_len  avg_len  max_len
+PPYR_OGS1.1.pep.fa.gz  FASTA   Protein    15,774  7,783,858       50    493.5   18,738
 (stdin)= 13d52d4c377261a3502bb4c92d0b94ff
+8a45b1ca3b2c64870240471ce605d2ec  PPYR_OGS1.1.pep.fa.gz
+#########
 PPYR_OGS1.1.mRNA.fa.gz
+file                    format  type  num_seqs     sum_len  min_len  avg_len  max_len
+PPYR_OGS1.1.mRNA.fa.gz  FASTA   DNA     15,774  23,369,493      150  1,481.5   56,216
 (stdin)= 1309e402dc0290346591706acce0139d
+2b2340b8d69023de906381b905d72952  PPYR_OGS1.1.mRNA.fa.gz
+#########
 PPYR_OGS1.1.gene.fa.gz
+file                    format  type  num_seqs      sum_len  min_len  avg_len  max_len
+PPYR_OGS1.1.gene.fa.gz  FASTA   DNA     15,773  120,886,234      150  7,664.1  435,498
 (stdin)= de9f080a4242fe27ac74d01f79abaaa3
+4a5700080e9035c8210b06bf05f0bbd5  PPYR_OGS1.1.gene.fa.gz
+#########
 Genome_release.fa
+file               format  type  num_seqs      sum_len  min_len    avg_len     max_len
+Genome_release.fa  FASTA   DNA      2,160  471,511,253      302  218,292.2  70,905,644
 (stdin)= ed26748e798201669998687d5c17fcdb
 74fa8f8e7bfd6e8dc7026d839c2cfd37  Genome_release.fa
