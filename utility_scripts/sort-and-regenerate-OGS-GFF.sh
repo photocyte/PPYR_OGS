@@ -66,7 +66,7 @@ seqkit stat ${BASE}.gene.fa.gz >> fasta-checksums.txt
 md5sum ${BASE}.gene.fa.gz >> fasta-checksums.txt
 echo "#########" >> fasta-checksums.txt
 echo "Genome_release.fa" >> fasta-checksums.txt
-echo `readlink -f Genome_release.fa` >> fasta-checksums.txt
+echo `basename $(readlink -f Genome_release.fa)` >> fasta-checksums.txt
 seqkit stat Genome_release.fa >> fasta-checksums.txt
 ./utility_scripts/checksum_FASTA_files.sh Genome_release.fa >> fasta-checksums.txt
 md5sum Genome_release.fa >> fasta-checksums.txt
