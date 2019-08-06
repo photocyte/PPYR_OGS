@@ -6,3 +6,6 @@ PPYR_OGS1.1.mRNA.fa.gz
 (stdin)= 1309e402dc0290346591706acce0139d
 PPYR_OGS1.1.gene.fa.gz
 (stdin)= de9f080a4242fe27ac74d01f79abaaa3
+Genome_release.fa
+(stdin)= ed26748e798201669998687d5c17fcdb
+74fa8f8e7bfd6e8dc7026d839c2cfd37  Genome_release.fa
