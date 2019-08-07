@@ -38,8 +38,8 @@ output:
 tag "${chunk}"
 script:
 """
-seqkit fx2tab -n -i ${chunk} | tr -s "\t" > fasta_records.txt ##A trailing \t is actually important for accurate grepping
-grep -f fasta_records.txt ${gff} | gt gff3 -tidy -sort -retainids > filtered.gff3
+seqkit fx2tab -n -i ${chunk} | tr -s "\t" | sed 's/^/\\^/g' > fasta_records.txt ##A trailing \t is actually important for accurate grepping
+grep -Gf fasta_records.txt ${gff} | gt gff3 -tidy -sort -retainids > filtered.gff3
 
 if [[ -s filtered.gff3 ]]
 then
