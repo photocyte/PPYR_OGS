@@ -28,6 +28,7 @@ seqkit fx2tab -n -i ${genome} | tr -s "\t" | sed 's/^/\\^/g' > genome_record_reg
 ##Note: grep and pipefail can screw things up
 ##If grep doesn't find a match, it returns exitcode 1
 ##which makes the script quit at that point.  So the rest of the script won't be executed
+##That is what the || true is supposed to fix
 
 echo "Checking NCBI contamination file against genome..."
 cat exclude.txt | grep -f genome_record_regex.txt > exclude_confirmed.txt || true
