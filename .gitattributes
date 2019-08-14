@@ -1,1 +1,2 @@
 *.fasta filter=lfs diff=lfs merge=lfs -text
+*.fasta.zip filter=lfs diff=lfs merge=lfs -text
