@@ -13,6 +13,7 @@ fasta_name = Channel.from(fasta_ch2.getVal().toFile().name)
 
 process splitGenome {
 cache 'deep'
+conda "ucsc-fasplit"
 input:
  file fasta_ch1
  file gff_ch1
@@ -29,7 +30,7 @@ faSplit about ${fasta_ch1} 10000000 split/
 fastaChunks.flatten().combine(gffCached).set{combinedCmds}
 
 process filterGFF {
-//conda "seqkit genometools"
+conda "seqkit genometools grep"
 cache 'deep'
 input:
  set file(chunk),file(gff) from combinedCmds
