@@ -3,31 +3,44 @@ fasta_ch = Channel.fromPath(params.fasta)
 gff_ch = Channel.fromPath(params.gff)
 
 fasta_ch.into{fasta_ch1 ; fasta_ch2 ; fasta_ch3}
-gff_ch.into{gff_ch1 ; gff_ch2}
+gff_ch.into{gff_ch1 ; gff_ch2 }
 
 fasta_ch3.println()
-gff_ch2.println()
 //fasta_name = Channel.from("Genome_release.fa")
 fasta_name = Channel.from(fasta_ch2.getVal().toFile().name)
 
-
-process splitGenome {
-cache 'deep'
-conda "ucsc-fasplit"
+process gffToScaffoldList {
 input:
- file fasta_ch1
  file gff_ch1
 output:
- file "split/*.fa" into fastaChunks
- file "${gff_ch1}" into gffCached
+ file "gff_scaffolds.txt" into gffScaffolds_ch
 script:
 """
-mkdir split
-faSplit about ${fasta_ch1} 10000000 split/
+cut -f 1 ${gff_ch1} | grep -Pv "^#" | uniq | sort | uniq > gff_scaffolds.txt
 """
 }
 
-fastaChunks.flatten().combine(gffCached).set{combinedCmds}
+process splitGenome {
+cache 'deep'
+conda "ucsc-fasplit seqkit"
+input:
+ file fasta_ch1
+ file gffScaffolds_ch
+output:
+ file "split/*.fa" into fastaChunks
+script:
+"""
+mkdir split
+faSplit about <(cat ${fasta_ch1} | seqkit grep -f ${gffScaffolds_ch}) 10000000 split/
+##If the scaffold isn't in the gff, just delete it.
+##for f in ./split/*.fa
+##do
+##sort <(cat ${gffScaffolds_ch}) <(seqkit fx2tab -ni \${f}) | uniq -d > \${f}.dups.txt
+##done
+"""
+}
+
+fastaChunks.flatten().combine(gff_ch2).set{combinedCmds}
 
 process filterGFF {
 conda "seqkit genometools grep"
