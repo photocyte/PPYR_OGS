@@ -8,9 +8,10 @@ gffFiles_ch = Channel.fromPath(gffFiles).flatten()
 gffFiles_ch.into{ gffFiles_ch1 ; gffFiles_ch2 }
 
 genomeFile = Channel.fromPath(params.genome)
-genomeFile.into{ genomeFile_ch1 ; genomeFile_ch2 ; genomeFile_ch3 ; genomeFile_ch4 }
+genomeFile.into{ genomeFile_ch1 ; genomeFile_ch2 ; genomeFile_ch3 ; genomeFile_ch4 ; genomeFile_ch5 }
 
 process parse_contamination_file {
+publishDir "trim_output",mode:"copy",overwrite:true
 input:
   file contaminationFile from file(params.contamination)
   file genome from genomeFile_ch1
@@ -75,7 +76,7 @@ write_handle.close()
 
 process gffSort {
 publishDir "trim_output/intersectingGffs/",mode:'copy',overwrite:true
-conda "gawk genometools"
+conda "genometools-genometools gawk grep"
 input:
  file trim_txt from trim_ch
 output:
@@ -104,6 +105,21 @@ rm -f tmp.gff
 """
 }
 
+process checksum_input_genome {
+publishDir "trim_output",mode:"copy",overwrite:true
+conda "seqkit bedtools"
+input:
+ file genome from genomeFile_ch5
+output:
+ file "input.${genome}.checksum.txt"
+script:
+"""
+echo "Checksummed with:" > input.${genome}.checksum.txt
+echo "seqkit seq -l ${genome} | seqkit sort -s | grep -v '>'" >> input.${genome}.checksum.txt
+seqkit seq -l ${genome} | seqkit sort -s | grep -v ">" | openssl md5 >> input.${genome}.checksum.txt
+"""
+}
+
 process trimGenome {
 publishDir "trim_output",overwrite:true
 conda "seqkit bedtools"
@@ -112,8 +128,9 @@ input:
  file gff from trimGff3_ch2
 output:
  file "${genome}_trimmed.fa" into trimmedGenome
- file "${genome}_subset-original.fa" into originalSubset, originalSubset_ch2
- file "${genome}_subset-trimmed.fa" into trimmedSubset
+ file "${genome}_subset-original.fa" into originalSubset, originalSubset_ch2, originalSubset_ch3
+ file "${genome}_subset-trimmed.fa" into trimmedSubset, trimmedSubset_ch2
+ file "${genome}_trimmed_seqs.fa"
 tag "${genome}"
 script:
 """
@@ -121,8 +138,9 @@ cat ${gff} | grep -v "#" | cut -f 1 > scaffolds.txt
 seqkit grep --delete-matched -f scaffolds.txt ${genome} > ${genome}_subset-original.fa
 seqkit grep -v -f scaffolds.txt ${genome} > ${genome}_remainder.fa
 bedtools maskfasta -fi ${genome}_subset-original.fa -bed ${gff} -fo ${genome}_masktmp.fa
+bedtools getfasta -fi ${genome}_subset-original.fa -bed ${gff} -fo ${genome}_trimmed_seqs.fa
 
-##Some of the gaps might show up at the beginning of the sequence, so have to trim them.  
+##Some of the gaps might show up at the beginning or end of the sequence, so have to trim them.  
 seqkit replace --by-seq -p "^[Nn]+" -r "" ${genome}_masktmp.fa | seqkit replace --by-seq -p "[Nn]+\$" -r "" > ${genome}_subset-trimmed.fa
 seqkit sort -n ${genome}_subset-trimmed.fa ${genome}_remainder.fa > ${genome}_trimmed.fa
 
@@ -191,7 +209,7 @@ rm -rf work
 
 process mergeLiftedGffs {
 publishDir "trim_output",mode:"copy",overwrite:true
-conda "genometools grep"
+conda "genometools-genometools gawk grep"
 input:
  file lgff from liftedGffs.collectFile(name: 'merged_lifted_gffs.gff',skip:2)
  file igff from ignoredGff
@@ -202,5 +220,20 @@ output:
 script:
 """
 cat ${lgff} ${igff} | grep -Pv "^#" | gt gff3 -tidy -sort -retainids > merged_lifted.gff3
+"""
+}
+
+process checksum_output_genomes {
+publishDir "trim_output",mode:"copy",overwrite:true
+conda "seqkit bedtools"
+input:
+ file genome from trimmedGenome.mix(originalSubset_ch3,trimmedSubset_ch2)
+output:
+ file "output.${genome}.checksum.txt"
+script:
+"""
+echo "Checksummed ${genome} with:" > input.${genome}.checksum.txt
+echo "seqkit seq -l ${genome} | seqkit sort -s | grep -v '>'" >> output.${genome}.checksum.txt
+seqkit seq -l ${genome} | seqkit sort -s | grep -v ">" | openssl md5 >> output.${genome}.checksum.txt
 """
 }

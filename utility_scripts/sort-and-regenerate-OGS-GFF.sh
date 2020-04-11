@@ -66,7 +66,7 @@ seqkit stat ${BASE}.gene.fa.gz >> fasta-checksums.txt
 md5sum ${BASE}.gene.fa.gz >> fasta-checksums.txt
 echo "#########" >> fasta-checksums.txt
 echo "Genome_release.fa" >> fasta-checksums.txt
-echo `basename $(readlink -f Genome_release.fa)` >> fasta-checksums.txt
+echo `basename "$(readlink -f Genome_release.fa)"` >> fasta-checksums.txt
 seqkit stat Genome_release.fa >> fasta-checksums.txt
 ./utility_scripts/checksum_FASTA_files.sh Genome_release.fa >> fasta-checksums.txt
 md5sum Genome_release.fa >> fasta-checksums.txt
@@ -75,3 +75,7 @@ echo "Overwriting original file with igvtools sorted version..."
 mv -f tmp.${BASE}.gt.igv.gff3 $1
 rm -f tmp.${BASE}.gt.gff3
 
+rm -f scaffolds_with_features.fa
+seqkit grep -f <(cat PNM_OGS0.1.gff3 | grep -v "#" | cut -f 1 | sort | uniq) Genome_release.fa > scaffolds_with_features.fa
+
+rm -f ./*.fai

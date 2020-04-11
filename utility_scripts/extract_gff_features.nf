@@ -43,7 +43,7 @@ faSplit about <(cat ${fasta_ch1} | seqkit grep -f ${gffScaffolds_ch}) 10000000 s
 fastaChunks.flatten().combine(gff_ch2).set{combinedCmds}
 
 process filterGFF {
-conda "seqkit genometools grep"
+conda "seqkit genometools-genometools grep"
 cache 'deep'
 input:
  set file(chunk),file(gff) from combinedCmds
@@ -65,7 +65,7 @@ fi
 }
 
 process makeGtIndex {
-//conda "genometools"
+conda "genometools-genometools"
 
 input:
  set file(chunk),file(filteredGff) from filteredChunks
@@ -88,7 +88,7 @@ feature_types = Channel.from( "CDS", "pep", "mRNA", "gene" )
 feature_types.combine(indexedChunks).set{extractCmds}
 
 process extractFeatures {
-//conda "seqkit genometools"
+conda "seqkit genometools-genometools"
 input:
  set val(featureType),file(fastaChunk),file(des),file(sds),file(md5),file(esq),file(ssp),file(ois),file(filteredGff) from extractCmds
 
@@ -123,7 +123,7 @@ extractedFeatureFastas.groupTuple().set{groupedFeatureFastas}
 fasta_name.combine(groupedFeatureFastas).set{totalGroup}
 
 process mergeFastas {
-publishDir './' , mode:'copy'
+publishDir './' , mode:'copy' , overwrite: true
 //conda "seqkit"
 input:
  set val(fn),val(featureType),file(allFiles) from totalGroup

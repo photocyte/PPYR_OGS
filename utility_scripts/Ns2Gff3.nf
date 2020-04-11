@@ -4,33 +4,18 @@ fastaFile = Channel.fromPath(params.fasta)
 fastaFile.into{fastaFile_ch1 ; fastaFile_ch2}
 fasta_name = Channel.value(fastaFile_ch2.getVal().toFile().name.tokenize(".").get(0))
 
-//process splitFasta {
-//conda "ucsc-fasplit"
-//input:
-// file fasta from fastaFile_ch1
-// val fasta_name
-//output:
-// file "split*" into splitFiles
-//tag "${fasta}"
-//script:
-//"""
-// faSplit about ${fasta} 1000000 split_${fasta_name}
-//"""
-//}
-
-
 process calculateGaps {
 cache 'deep'
 cpus 1
 conda "seqkit"
 input:
- file fasta from fastaFile_ch1.splitFasta(size:'1.MB',file:true)
+ file fasta from fastaFile_ch1.splitFasta(size:'10.MB',file:true)
 output:
  file "*_located_gaps.gtf" into gtfFiles
 tag "${fasta}"
 script:
 """
-seqkit locate -j ${task.cpus} --gtf -Pi -p "N+" ${fasta} | sed 's/location/gapped_bases/g' | sed 's/gene_id /ID=/g' | sed 's/; //g' > ${fasta}_located_gaps.gtf
+seqkit locate -j ${task.cpus} --gtf -Pi -r -p "[Nn]+" ${fasta} | sed 's/location/gapped_bases/g' | sed 's/gene_id /ID=/g' | sed 's/; //g' > ${fasta}_located_gaps.gtf
 """
 }
 
@@ -52,7 +37,7 @@ cat ${splitGtfFile} | gawk 'match(\$0, /^(.+)\tSeqKit\tgapped_bases\t([0-9]+)\t(
 
 process combineAndPublish {
 publishDir './Supporting_non-OGS_data/Gaps/',mode:'copy',overwrite:true
-conda "genometools"
+conda "genometools-genometools"
 input:
  file gf from gffFiles.collect()
  val fasta_name
