@@ -18,7 +18,7 @@ echo "Done gt sorting."
 
 process igvtoolsSort {
 conda "igvtools"
-publishDir './' , mode:'copy'
+publishDir './' , mode:'link'
 input:
  file gtSorted
 output:
@@ -46,10 +46,10 @@ script:
 
 workflow doubleSort_wf {
 take: gff
+main: 
  gtSort(gff)
  igvtoolsSort(gtSort.out)
  EVM_gff3_validator(igvtoolsSort.out)
-
 emit:
  igvtoolsSort.out
 }
