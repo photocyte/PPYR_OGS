@@ -30,7 +30,7 @@ BASE=${BASE%.gff3}
 #########################
 
 echo "gt and igv sorting"
-nextflow run ./utility_scripts/doubleSort.nf --gff $1 --base ${BASE} -resume
+nextflow run ./utility_scripts/doubleSort.nf --gff $1 -resume
 
 echo "extracting features with nextflow extract_gene_features.nf"
 nextflow run ./utility_scripts/extract_gff_features.nf --gff tmp.${BASE}.gt.igv.gff3 --fasta Genome_release.fa -resume -with-trace

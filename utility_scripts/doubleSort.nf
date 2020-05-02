@@ -1,5 +1,4 @@
 nextflow.preview.dsl=2
-Channel.fromPath(params.gff).set{gffInput}
 
 process gtSort {
 conda "genometools-genometools"
@@ -23,11 +22,11 @@ publishDir './' , mode:'copy'
 input:
  file gtSorted
 output:
- file "tmp.${params.base}.gt.igv.gff3" into doubleSorted
+ file "tmp.${gtSorted}.gt.igv.gff3" into doubleSorted
 script:
 """
 echo "Sorting with igvtools..."
-igvtools sort ${gtSorted} tmp.${params.base}.gt.igv.gff3
+igvtools sort ${gtSorted} tmp.${gtSorted}.gt.igv.gff3
 echo "Done sorting."
 """
 }
@@ -56,5 +55,6 @@ emit:
 }
 
 workflow {
- doubleSort_wf(params.gff)
+ Channel.fromPath(params.gff).set{gffInput}
+ doubleSort_wf(gffInput)
 }
