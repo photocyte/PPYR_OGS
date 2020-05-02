@@ -4,9 +4,9 @@ process gtSort {
 conda "genometools-genometools"
 cache 'deep'
 input:
- file gffInput
+ path gffInput
 output:
- file "tmp.${gffInput}.gt.gff3" into gtSorted
+ path "tmp.${gffInput}.gt.gff3"
 
 script:
 """
@@ -18,11 +18,11 @@ echo "Done gt sorting."
 
 process igvtoolsSort {
 conda "igvtools"
-publishDir './' , mode:'link'
+publishDir './results/doubleSort' , mode:'link'
 input:
- file gtSorted
+ path gtSorted
 output:
- file "tmp.${gtSorted}.gt.igv.gff3" into doubleSorted
+ path "tmp.${gtSorted}.gt.igv.gff3"
 script:
 """
 echo "Sorting with igvtools..."
@@ -34,7 +34,7 @@ echo "Done sorting."
 process EVM_gff3_validator {
 conda "evidencemodeler"
 input: 
- file doubleSorted
+ path doubleSorted
 echo true
 script:
 """
