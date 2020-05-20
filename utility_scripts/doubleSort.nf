@@ -31,7 +31,7 @@ echo "Done sorting."
 """
 }
 
-process EVM_gff3_validator {
+process EVM_gff3_simple_validator {
 conda "evidencemodeler"
 input: 
  path doubleSorted
@@ -40,7 +40,7 @@ script:
 """
 #echo \$CONDA_PREFIX
 #echo \$CONDA_PREFIX_1
-\$CONDA_PREFIX/opt/evidencemodeler-*/EvmUtils/gff3_gene_prediction_file_validator.pl ${doubleSorted}
+\$CONDA_PREFIX/opt/evidencemodeler-*/EvmUtils/gff3_gene_prediction_file_validator.pl <(cat ${doubleSorted} | grep 
 """
 }
 
@@ -49,7 +49,7 @@ take: gff
 main: 
  gtSort(gff)
  igvtoolsSort(gtSort.out)
- EVM_gff3_validator(igvtoolsSort.out)
+ //EVM_gff3_simple_validator(igvtoolsSort.out)
 emit:
  igvtoolsSort.out
 }

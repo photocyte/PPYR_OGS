@@ -33,7 +33,7 @@ echo "gt and igv sorting"
 nextflow run ./utility_scripts/doubleSort.nf --gff $1 -resume
 
 echo "extracting features with nextflow extract_gene_features.nf"
-nextflow run ./utility_scripts/extract_gff_features.nf --gff tmp.${BASE}.gt.igv.gff3 --fasta Genome_release.fa -resume -with-trace
+nextflow run ./utility_scripts/extract_gff_features.nf --gff ./results/doubleSort/tmp.tmp.*.gff3.gt.gff3.gt.igv.gff3  --fasta Genome_release.fa -resume -with-trace
 
 echo "Renaming nextflow files..."
 mv Genome_release.fa.CDS.fa.gz ${BASE}.CDS.fa.gz
@@ -72,8 +72,8 @@ seqkit stat Genome_release.fa >> fasta-checksums.txt
 md5sum Genome_release.fa >> fasta-checksums.txt
 
 echo "Overwriting original file with igvtools sorted version..."
-mv -f tmp.${BASE}.gt.igv.gff3 $1
-rm -f tmp.${BASE}.gt.gff3
+mv -f ./results/doubleSort/tmp.tmp.*.gff3.gt.gff3.gt.igv.gff3  $1
+rm -f ./results/doubleSort/tmp.tmp.*.gff3.gt.gff3.gt.igv.gff3 
 
 rm -f scaffolds_with_features.fa
 seqkit grep -f <(cat PNM_OGS0.1.gff3 | grep -v "#" | cut -f 1 | sort | uniq) Genome_release.fa > scaffolds_with_features.fa
