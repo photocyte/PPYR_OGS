@@ -1,33 +1,26 @@
-params.splitBy = 5
-fasta_ch = Channel.fromPath(params.fasta)
-gff_ch = Channel.fromPath(params.gff)
-
-fasta_ch.into{fasta_ch1 ; fasta_ch2 ; fasta_ch3}
-gff_ch.into{gff_ch1 ; gff_ch2 }
-
-fasta_ch3.println()
-//fasta_name = Channel.from("Genome_release.fa")
-fasta_name = Channel.from(fasta_ch2.getVal().toFile().name)
+nextflow.enable.dsl=2
 
 process gffToScaffoldList {
 input:
- file gff_ch1
+ path gff_ch1
 output:
- file "gff_scaffolds.txt" into gffScaffolds_ch
+ path "gff_scaffolds.txt"
+tag "${gff_ch1}"
 script:
 """
 cut -f 1 ${gff_ch1} | grep -Pv "^#" | uniq | sort | uniq > gff_scaffolds.txt
 """
 }
 
-process splitGenome {
+process partitionGenome {
 cache 'deep'
 conda "ucsc-fasplit seqkit"
 input:
- file fasta_ch1
- file gffScaffolds_ch
+ path fasta_ch1
+ path gffScaffolds_ch
 output:
- file "split/*.fa" into fastaChunks
+ path "split/*.fa"
+tag "${fasta_ch1}"
 script:
 """
 mkdir split
@@ -40,15 +33,14 @@ faSplit about <(cat ${fasta_ch1} | seqkit grep -f ${gffScaffolds_ch}) 10000000 s
 """
 }
 
-fastaChunks.flatten().combine(gff_ch2).set{combinedCmds}
 
 process filterGFF {
 conda "seqkit genometools-genometools grep"
 cache 'deep'
 input:
- set file(chunk),file(gff) from combinedCmds
+ tuple path(chunk),path(gff)
 output:
- set file("${chunk}"),file("filtered.gff3") optional true into filteredChunks
+ tuple path("${chunk}"),path("filtered.gff3") optional true
 tag "${chunk}"
 script:
 """
@@ -68,9 +60,9 @@ process makeGtIndex {
 conda "genometools-genometools"
 
 input:
- set file(chunk),file(filteredGff) from filteredChunks
+ tuple path(chunk),path(filteredGff)
 output:
- set file("${chunk}"),file("${chunk}.des"),file("${chunk}.sds"),file("${chunk}.md5"),file("${chunk}.esq"),file("${chunk}.ssp"),file("${chunk}.ois"),file("${filteredGff}") into indexedChunks
+ tuple path("${chunk}"),path("${chunk}.des"),path("${chunk}.sds"),path("${chunk}.md5"),path("${chunk}.esq"),path("${chunk}.ssp"),path("${chunk}.ois"),path("${filteredGff}")
 
 script:
 """
@@ -84,16 +76,13 @@ fi
 """
 }
 
-feature_types = Channel.from( "CDS", "pep", "mRNA", "gene" )
-feature_types.combine(indexedChunks).set{extractCmds}
-
 process extractFeatures {
 conda "seqkit genometools-genometools"
 input:
- set val(featureType),file(fastaChunk),file(des),file(sds),file(md5),file(esq),file(ssp),file(ois),file(filteredGff) from extractCmds
+ tuple val(featureType),path(fastaChunk),path(des),path(sds),path(md5),path(esq),path(ssp),path(ois),path(filteredGff)
 
 output:
- set val("${featureType}"),file("${fastaChunk}.${featureType}.fa.gz") into extractedFeatureFastas 
+ tuple val("${featureType}"),path("${fastaChunk}.${featureType}.fa.gz")
 tag "${featureType} ${fastaChunk}"
 script:
 """
@@ -110,6 +99,14 @@ elif [ "$featureType" == "mRNA" ]
 then
 echo "Extracting mRNA features..."
   gt extractfeat -join -seqid -usedesc -retainids -coords -type exon -seqfile ${fastaChunk} ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.mRNA.fa.gz
+elif [ "$featureType" == "indExon" ]
+then
+echo "Extracting individual exon features..."
+  gt extractfeat -seqid -usedesc -retainids -coords -type exon -seqfile ${fastaChunk} ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.indExon.fa.gz
+elif [ "$featureType" == "indCDS" ]
+then
+echo "Extracting individual CDS features..."
+  gt extractfeat -seqid -usedesc -retainids -coords -type CDS -translate -gcode 1 -seqfile ${fastaChunk} ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.indCDS.fa.gz
 elif [ "$featureType" == "gene" ]
 then
 echo "Extracting gene features..."
@@ -118,21 +115,44 @@ fi
 """
 }
 
-extractedFeatureFastas.groupTuple().set{groupedFeatureFastas}
-
-fasta_name.combine(groupedFeatureFastas).set{totalGroup}
 
 process mergeFastas {
-publishDir './' , mode:'copy' , overwrite: true
+publishDir './' , mode:'link' , overwrite: true
 //conda "seqkit"
 input:
- set val(fn),val(featureType),file(allFiles) from totalGroup
+ tuple val(fn),val(featureType),path(allFiles)
 output:
- file "${fn}.${featureType}.fa.gz"
+ path "${fn}.${featureType}.fa.gz"
 tag "${fn}.${featureType}.fa.gz"
 script:
  """
  ls -f1 | grep ".fa.gz" > files.txt
  cat files.txt | xargs cat | seqkit sort -n | gzip > ${fn}.${featureType}.fa.gz
  """
+}
+
+workflow {
+params.splitBy = 5
+fasta_ch = Channel.fromPath(params.fasta)
+gff_ch = Channel.fromPath(params.gff)
+
+
+
+gffToScaffoldList(gff_ch)
+
+
+fastaChunks = partitionGenome(fasta_ch,gffToScaffoldList.out)
+fastaChunks.flatten().combine(gff_ch).set{combinedCmds}
+
+filterGFF(combinedCmds)
+indexedChunks = makeGtIndex(filterGFF.out)
+
+feature_types = Channel.from( "CDS", "pep", "mRNA", "gene" , "indCDS" , "indExon" )
+feature_types.combine(indexedChunks).set{extractCmds}
+extractFeatures(extractCmds)
+extractFeatures.out.groupTuple().set{groupedFeatureFastas}
+
+mergeCmds = fasta_ch.map{ it.getFileName() }.combine(groupedFeatureFastas)
+mergeFastas(mergeCmds)
+
 }
