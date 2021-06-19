@@ -25,6 +25,7 @@ script:
 """
 mkdir split
 faSplit about <(cat ${fasta_ch1} | seqkit grep -f ${gffScaffolds_ch}) 10000000 split/
+
 ##If the scaffold isn't in the gff, just delete it.
 ##for f in ./split/*.fa
 ##do
@@ -45,7 +46,7 @@ tag "${chunk}"
 script:
 """
 seqkit fx2tab -n -i ${chunk} | tr -s "\t" | sed 's/^/\\^/g' > fasta_records.txt ##A trailing \t is actually important for accurate grepping
-grep -Gf fasta_records.txt ${gff} | gt gff3 -tidy -sort -retainids > filtered.gff3
+grep -Gf fasta_records.txt ${gff} | gt gff3 -tidy -sort -retainids -addintrons > filtered.gff3
 
 if [[ -s filtered.gff3 ]]
 then
@@ -103,6 +104,10 @@ elif [ "$featureType" == "indExon" ]
 then
 echo "Extracting individual exon features..."
   gt extractfeat -seqid -usedesc -retainids -coords -type exon -seqfile ${fastaChunk} ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.indExon.fa.gz
+elif [ "$featureType" == "indIntron" ]
+then
+echo "Extracting individual intron features..."
+  gt extractfeat -seqid -usedesc -retainids -coords -type intron -seqfile ${fastaChunk} ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.indIntron.fa.gz
 elif [ "$featureType" == "indCDS" ]
 then
 echo "Extracting individual CDS features..."
@@ -147,7 +152,7 @@ fastaChunks.flatten().combine(gff_ch).set{combinedCmds}
 filterGFF(combinedCmds)
 indexedChunks = makeGtIndex(filterGFF.out)
 
-feature_types = Channel.from( "CDS", "pep", "mRNA", "gene" , "indCDS" , "indExon" )
+feature_types = Channel.from( "CDS", "pep", "mRNA", "gene" , "indCDS" , "indExon" , "indIntron")
 feature_types.combine(indexedChunks).set{extractCmds}
 extractFeatures(extractCmds)
 extractFeatures.out.groupTuple().set{groupedFeatureFastas}
