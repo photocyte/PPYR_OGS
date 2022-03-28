@@ -1,14 +1,16 @@
 nextflow.enable.dsl=2
 
+include { doubleSort_wf } from './doubleSort.nf'
+
 process gffToScaffoldList {
 input:
  path gff_ch1
 output:
- path "gff_scaffolds.txt"
+ path "gff_scaffold_ids.txt"
 tag "${gff_ch1}"
 script:
 """
-cut -f 1 ${gff_ch1} | grep -Pv "^#" | uniq | sort | uniq > gff_scaffolds.txt
+cut -f 1 ${gff_ch1} | grep -Pv "^#" | uniq | sort | uniq > gff_scaffold_ids.txt
 """
 }
 
@@ -43,10 +45,11 @@ input:
 output:
  tuple path("${chunk}"),path("filtered.gff3") optional true
 tag "${chunk}"
-script:
-"""
-seqkit fx2tab -n -i ${chunk} | tr -s "\t" | sed 's/^/\\^/g' > fasta_records.txt ##A trailing \t is actually important for accurate grepping
-grep -Gf fasta_records.txt ${gff} | gt gff3 -tidy -sort -retainids -addintrons > filtered.gff3
+shell:
+'''
+seqkit fx2tab -n -i !{chunk} > fx2tab.txt
+cat fx2tab.txt | sed 's/^/\\^/g' | sed "s/$/\t/g" | tr -s "\t" > fasta_record_ids_regex.txt ##A trailing \t is actually important for accurate grepping
+grep -Gf fasta_record_ids_regex.txt !{gff} | gt gff3 -tidy -sort -retainids -addintrons > filtered.gff3
 
 if [[ -s filtered.gff3 ]]
 then
@@ -54,7 +57,7 @@ echo "pass"
 else
 rm -f filtered.gff3
 fi
-"""
+'''
 }
 
 process makeGtIndex {
@@ -139,7 +142,7 @@ script:
 workflow {
 params.splitBy = 5
 fasta_ch = Channel.fromPath(params.fasta)
-gff_ch = Channel.fromPath(params.gff)
+gff_ch = doubleSort_wf(Channel.fromPath(params.gff))
 
 
 

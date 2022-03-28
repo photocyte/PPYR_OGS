@@ -64,7 +64,7 @@ main:
  gtSort(gff)
  igvtoolsSort(gtSort.out)
  //EVM_gff3_simple_validator(igvtoolsSort.out)
- gfacs_validator(igvtoolsSort.out)
+ //gfacs_validator(igvtoolsSort.out)
 emit:
  igvtoolsSort.out
 }
