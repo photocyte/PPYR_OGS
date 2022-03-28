@@ -1,4 +1,4 @@
-nextflow.preview.dsl=2
+nextflow.enable.dsl=2
 
 process gtSort {
 conda "genometools-genometools"
@@ -44,12 +44,27 @@ script:
 """
 }
 
+process gfacs_validator {
+conda "perl-gfacs coreutils"
+input: 
+ path doubleSorted
+echo true
+shell:
+'''
+GFACS_PATH="$(dirname $(readlink -f $(which gfacs.pl)))"
+ln -s $GFACS_PATH/* .
+mkdir output
+gfacs.pl -f refseq_gff -O output !{doubleSorted}
+'''
+}
+
 workflow doubleSort_wf {
 take: gff
 main: 
  gtSort(gff)
  igvtoolsSort(gtSort.out)
  //EVM_gff3_simple_validator(igvtoolsSort.out)
+ gfacs_validator(igvtoolsSort.out)
 emit:
  igvtoolsSort.out
 }

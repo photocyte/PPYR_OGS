@@ -33,7 +33,7 @@ echo "gt and igv sorting"
 nextflow run ./utility_scripts/doubleSort.nf --gff $1 -resume
 
 echo "extracting features with nextflow extract_gene_features.nf"
-nextflow run ./utility_scripts/extract_gff_features.nf --gff ./results/doubleSort/tmp.tmp.*.gff3.gt.gff3.gt.igv.gff3  --fasta Genome_release.fa -resume -with-trace
+nextflow run ./utility_scripts/extract_gff_features.nf --gff ./results/doubleSort/tmp.tmp.*.gff3.gt.gff3.gt.igv.gff3  --fasta Genome_release.fa -resume -with-trace -with-report
 
 echo "Renaming nextflow files..."
 mv Genome_release.fa.CDS.fa.gz ${BASE}.CDS.fa.gz
