@@ -82,6 +82,7 @@ fi
 
 process extractFeatures {
 conda "seqkit genometools-genometools"
+cache 'deep'
 input:
  tuple val(featureType),path(fastaChunk),path(des),path(sds),path(md5),path(esq),path(ssp),path(ois),path(filteredGff)
 
@@ -111,10 +112,14 @@ elif [ "$featureType" == "indIntron" ]
 then
 echo "Extracting individual intron features..."
   gt extractfeat -seqid -usedesc -retainids -coords -type intron -seqfile ${fastaChunk} ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.indIntron.fa.gz
-elif [ "$featureType" == "indCDS" ]
+elif [ "$featureType" == "indCDSpep" ]
 then
-echo "Extracting individual CDS features..."
-  gt extractfeat -seqid -usedesc -retainids -coords -type CDS -translate -gcode 1 -seqfile ${fastaChunk} ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.indCDS.fa.gz
+echo "Extracting individual CDS features as peptides..."
+  gt extractfeat -seqid -usedesc -retainids -coords -type CDS -translate -gcode 1 -seqfile ${fastaChunk} ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.indCDSpep.fa.gz
+elif [ "$featureType" == "indCDSnt" ]
+then
+echo "Extracting individual CDS features as nucleotides..."
+  gt extractfeat -seqid -usedesc -retainids -coords -type CDS -seqfile ${fastaChunk} ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.indCDSnt.fa.gz
 elif [ "$featureType" == "gene" ]
 then
 echo "Extracting gene features..."
@@ -149,13 +154,14 @@ gff_ch = doubleSort_wf(Channel.fromPath(params.gff))
 gffToScaffoldList(gff_ch)
 
 
-fastaChunks = partitionGenome(fasta_ch,gffToScaffoldList.out)
+// fastaChunks = partitionGenome(fasta_ch,gffToScaffoldList.out)
+fastaChunks = fasta_ch.splitFasta(size: '1.MB',file:true) // Since this is size in bytes, should be ~= to bp. 
 fastaChunks.flatten().combine(gff_ch).set{combinedCmds}
 
 filterGFF(combinedCmds)
 indexedChunks = makeGtIndex(filterGFF.out)
 
-feature_types = Channel.from( "CDS", "pep", "mRNA", "gene" , "indCDS" , "indExon" , "indIntron")
+feature_types = Channel.from( "CDS", "pep", "mRNA", "gene" , "indCDSnt" , "indCDSpep", "indExon" , "indIntron")
 feature_types.combine(indexedChunks).set{extractCmds}
 extractFeatures(extractCmds)
 extractFeatures.out.groupTuple().set{groupedFeatureFastas}
