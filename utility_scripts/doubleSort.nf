@@ -23,7 +23,7 @@ publishDir './results/doubleSort' , mode:'link'
 input:
  path gtSorted
 output:
- path "tmp.${gtSorted}.gt.igv.gff3"
+ path "output/${gtSorted}"
 script:
 """
 mkdir -p output
