@@ -17,6 +17,23 @@ echo "Done gt sorting."
 """
 }
 
+process gtAddIntrons {
+conda "genometools-genometools"
+cache 'deep'
+input:
+ path gffInput
+output:
+ path "output/${gffInput}"
+
+script:
+"""
+mkdir -p output
+echo "Sorting with gt..."
+cat ${gffInput} | grep -v "#" | grep -v -P "\tintron\t" | gt gff3 -tidy -sort -retainids -addintrons > output/${gffInput}
+echo "Done gt sorting."
+"""
+}
+
 process igvtoolsSort {
 conda "igvtools"
 publishDir './results/doubleSort' , mode:'link'
