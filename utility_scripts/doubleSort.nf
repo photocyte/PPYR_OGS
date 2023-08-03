@@ -12,7 +12,7 @@ script:
 """
 mkdir -p output
 echo "Sorting with gt..."
-cat ${gffInput} | grep -v "#" | gt gff3 -tidy -sort -retainids > output/${gffInput}
+cat ${gffInput} | grep -v "#" | grep -v -P "\tintron\t" | gt gff3 -tidy -sort -retainids -addintrons > output/${gffInput}
 echo "Done gt sorting."
 """
 }
