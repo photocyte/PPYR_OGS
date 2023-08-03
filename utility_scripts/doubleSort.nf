@@ -6,12 +6,13 @@ cache 'deep'
 input:
  path gffInput
 output:
- path "tmp.${gffInput}.gt.gff3"
+ path "output/${gffInput}"
 
 script:
 """
+mkdir -p output
 echo "Sorting with gt..."
-cat ${gffInput} | grep -v "#" | gt gff3 -tidy -sort -retainids > tmp.${gffInput}.gt.gff3
+cat ${gffInput} | grep -v "#" | gt gff3 -tidy -sort -retainids > output/${gffInput}
 echo "Done gt sorting."
 """
 }
@@ -25,8 +26,9 @@ output:
  path "tmp.${gtSorted}.gt.igv.gff3"
 script:
 """
+mkdir -p output
 echo "Sorting with igvtools..."
-igvtools sort ${gtSorted} tmp.${gtSorted}.gt.igv.gff3
+igvtools sort ${gtSorted} output/${gtSorted}
 echo "Done sorting."
 """
 }
