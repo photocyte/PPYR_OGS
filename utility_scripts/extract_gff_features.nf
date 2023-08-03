@@ -166,7 +166,8 @@ feature_types.combine(indexedChunks).set{extractCmds}
 extractFeatures(extractCmds)
 extractFeatures.out.groupTuple().set{groupedFeatureFastas}
 
-mergeCmds = fasta_ch.map{ it.getFileName() }.combine(groupedFeatureFastas)
+##mergeCmds = fasta_ch.map{ it.getFileName() }.combine(groupedFeatureFastas)
+mergeCmds = gff_ch.combine(fasta_ch).map{ it[0].getFileName()+'_'+it[1].getFileName()}.combine(groupedFeatureFastas)
 mergeFastas(mergeCmds)
 
 }
