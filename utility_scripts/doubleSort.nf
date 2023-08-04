@@ -12,13 +12,15 @@ script:
 """
 mkdir -p output
 echo "Sorting with gt..."
-cat ${gffInput} | grep -v "#" | grep -v -P "\tintron\t" | gt gff3 -tidy -sort -retainids -addintrons > output/${gffInput}
+cat ${gffInput} | gt gff3 -tidy -sort -retainids -checkids -fixregionboundaries > output/${gffInput}
+## I don't have -addintrons, as is not aware of existing introns. It will duplicate them
+## It also doesn't give an informative ID to the intron, or any ID at all. They only have Parent= attributes
 echo "Done gt sorting."
 """
 }
 
-process gtAddIntrons {
-conda "genometools-genometools"
+process agatAddIntrons {
+conda "agat"
 cache 'deep'
 input:
  path gffInput
@@ -28,9 +30,8 @@ output:
 script:
 """
 mkdir -p output
-echo "Sorting with gt..."
-cat ${gffInput} | grep -v "#" | grep -v -P "\tintron\t" | gt gff3 -tidy -sort -retainids -addintrons > output/${gffInput}
-echo "Done gt sorting."
+cat ${gffInput} | awk '!/\tintron\t/' > nointron.${gffInput}
+agat_sp_add_introns.pl --gff nointron.${gffInput} --out output/${gffInput} 
 """
 }
 
@@ -80,7 +81,8 @@ gfacs.pl -f refseq_gff -O output !{doubleSorted}
 workflow doubleSort_wf {
 take: gff
 main: 
- gtSort(gff)
+ agatAddIntrons(gff)
+ gtSort(agatAddIntrons.out)
  igvtoolsSort(gtSort.out)
  //EVM_gff3_simple_validator(igvtoolsSort.out)
  //gfacs_validator(igvtoolsSort.out)
