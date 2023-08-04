@@ -20,7 +20,7 @@ echo "Done gt sorting."
 }
 
 process agatAddIntrons {
-conda "agat"
+conda "agat" //Also available via Docker/Apptainer
 cache 'deep'
 input:
  path gffInput
@@ -81,8 +81,8 @@ gfacs.pl -f refseq_gff -O output !{doubleSorted}
 workflow doubleSort_wf {
 take: gff
 main: 
- agatAddIntrons(gff)
- gtSort(agatAddIntrons.out)
+ //agatAddIntrons(gff)
+ gtSort(gff)
  igvtoolsSort(gtSort.out)
  //EVM_gff3_simple_validator(igvtoolsSort.out)
  //gfacs_validator(igvtoolsSort.out)
