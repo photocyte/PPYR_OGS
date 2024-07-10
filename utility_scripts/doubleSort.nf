@@ -1,7 +1,7 @@
 nextflow.enable.dsl=2
 
 process gtSort {
-conda "genometools-genometools"
+conda "bioconda::genometools-genometools"
 cache 'deep'
 input:
  path gffInput
@@ -20,7 +20,7 @@ echo "Done gt sorting."
 }
 
 process agatAddIntrons {
-conda "agat" //Also available via Docker/Apptainer
+conda "bioconda::agat" //Also available via Docker/Apptainer
 cache 'deep'
 input:
  path gffInput
@@ -36,7 +36,7 @@ agat_sp_add_introns.pl --gff nointron.${gffInput} --out output/${gffInput}
 }
 
 process igvtoolsSort {
-conda "igvtools"
+conda "bioconda::igvtools"
 publishDir './results/doubleSort' , mode:'link'
 input:
  path gtSorted
@@ -52,7 +52,7 @@ echo "Done sorting."
 }
 
 process EVM_gff3_simple_validator {
-conda "evidencemodeler"
+conda "bioconda::evidencemodeler"
 input: 
  path doubleSorted
 echo true
@@ -65,7 +65,7 @@ script:
 }
 
 process gfacs_validator {
-conda "perl-gfacs coreutils"
+conda "bioconda::perl-gfacs conda-forge::coreutils"
 input: 
  path doubleSorted
 echo true
