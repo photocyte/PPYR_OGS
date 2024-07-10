@@ -16,7 +16,7 @@ cut -f 1 ${gff_ch1} | grep -Pv "^#" | uniq | sort | uniq > gff_scaffold_ids.txt
 
 process partitionGenome {
 cache 'deep'
-conda "ucsc-fasplit seqkit"
+conda "bioconda::ucsc-fasplit bioconda::seqkit"
 input:
  path fasta_ch1
  path gffScaffolds_ch
@@ -38,7 +38,7 @@ faSplit about <(cat ${fasta_ch1} | seqkit grep -f ${gffScaffolds_ch}) 10000000 s
 
 
 process filterGFF {
-conda "seqkit genometools-genometools grep"
+conda "bioconda::seqkit bioconda::genometools-genometools conda-forge::grep"
 cache 'deep'
 input:
  tuple path(chunk),path(gff)
@@ -61,7 +61,7 @@ fi
 }
 
 process makeGtIndex {
-conda "genometools-genometools"
+conda "bioconda::genometools-genometools"
 
 input:
  tuple path(chunk),path(filteredGff)
@@ -81,7 +81,7 @@ fi
 }
 
 process extractFeatures {
-conda "seqkit genometools-genometools"
+conda "bioconda::seqkit bioconda::genometools-genometools"
 cache 'deep'
 input:
  tuple val(featureType),path(fastaChunk),path(des),path(sds),path(md5),path(esq),path(ssp),path(ois),path(filteredGff)
@@ -131,7 +131,7 @@ fi
 
 process mergeFastas {
 publishDir './' , mode:'link' , overwrite: true
-//conda "seqkit"
+//conda "bioconda::seqkit"
 input:
  tuple val(fn),val(featureType),path(allFiles)
 output:
