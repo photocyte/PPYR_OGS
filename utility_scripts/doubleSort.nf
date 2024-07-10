@@ -1,7 +1,7 @@
 nextflow.enable.dsl=2
 
 process gtSort {
-conda "bioconda::genometools-genometools conda-forge:pango"
+conda "conda-forge::pango bioconda::genometools-genometools"
 cache 'deep'
 input:
  path gffInput
