@@ -131,7 +131,7 @@ fi
 
 process mergeFastas {
 publishDir './' , mode:'link' , overwrite: true
-//conda "bioconda::seqkit conda-forge:coreutils"
+conda "bioconda::seqkit conda-forge:coreutils"
 input:
  tuple val(fn),val(featureType),path(allFiles)
 output:
