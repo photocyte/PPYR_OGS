@@ -95,35 +95,35 @@ script:
 if [ "$featureType" == "CDS" ]
 then
  echo "Extracting CDS features..."
- gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -seqfile <(seqkit seq -i ${fastaChunk}) ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.CDS.fa.gz
+ gt extractfeat -join -seqid -matchdescstart -retainids -coords -type CDS -seqfile ${fastaChunk} ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.CDS.fa.gz
 elif [ "$featureType" == "pep" ] 
 then
 echo "Extracting peptide features..."
-  gt extractfeat -join -seqid -usedesc -retainids -coords -type CDS -translate -gcode 1 -seqfile <(seqkit seq -i ${fastaChunk}) ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.pep.fa.gz
+  gt extractfeat -join -seqid -matchdescstart -retainids -coords -type CDS -translate -gcode 1 -seqfile ${fastaChunk} ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.pep.fa.gz
 elif [ "$featureType" == "mRNA" ]
 then
 echo "Extracting mRNA features..."
-  gt extractfeat -join -seqid -usedesc -retainids -coords -type exon -seqfile <(seqkit seq -i ${fastaChunk}) ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.mRNA.fa.gz
+  gt extractfeat -join -seqid -matchdescstart -retainids -coords -type exon -seqfile ${fastaChunk} ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.mRNA.fa.gz
 elif [ "$featureType" == "indExon" ]
 then
 echo "Extracting individual exon features..."
-  gt extractfeat -seqid -usedesc -retainids -coords -type exon -seqfile <(seqkit seq -i ${fastaChunk}) ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.indExon.fa.gz
+  gt extractfeat -seqid -matchdescstart -retainids -coords -type exon -seqfile ${fastaChunk} ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.indExon.fa.gz
 elif [ "$featureType" == "indIntron" ]
 then
 echo "Extracting individual intron features..."
-  gt extractfeat -seqid -usedesc -retainids -coords -type intron -seqfile <(seqkit seq -i ${fastaChunk}) ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.indIntron.fa.gz
+  gt extractfeat -seqid -matchdescstart -retainids -coords -type intron -seqfile ${fastaChunk} ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.indIntron.fa.gz
 elif [ "$featureType" == "indCDSpep" ]
 then
 echo "Extracting individual CDS features as peptides..."
-  gt extractfeat -seqid -usedesc -retainids -coords -type CDS -translate -gcode 1 -seqfile <(seqkit seq -i ${fastaChunk}) ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.indCDSpep.fa.gz
+  gt extractfeat -seqid -matchdescstart -retainids -coords -type CDS -translate -gcode 1 -seqfile ${fastaChunk} ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.indCDSpep.fa.gz
 elif [ "$featureType" == "indCDSnt" ]
 then
 echo "Extracting individual CDS features as nucleotides..."
-  gt extractfeat -seqid -usedesc -retainids -coords -type CDS -seqfile <(seqkit seq -i ${fastaChunk}) ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.indCDSnt.fa.gz
+  gt extractfeat -seqid -matchdescstart -retainids -coords -type CDS -seqfile ${fastaChunk} ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.indCDSnt.fa.gz
 elif [ "$featureType" == "gene" ]
 then
 echo "Extracting gene features..."
-  gt extractfeat -seqid -usedesc -retainids -coords -type gene -seqfile <(seqkit seq -i ${fastaChunk}) ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.gene.fa.gz
+  gt extractfeat -seqid -matchdescstart -retainids -coords -type gene -seqfile ${fastaChunk} ${filteredGff} | seqkit replace -p "\\(joined\\)|\\(translated\\)" -r "" | gzip > ${fastaChunk}.gene.fa.gz
 fi 
 """
 }
