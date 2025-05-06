@@ -140,7 +140,7 @@ tag "${fn}.${featureType}.fa.gz"
 script:
  """
  ls -f1 | grep ".fa.gz" > files.txt
- cat files.txt | xargs cat | seqkit sort -n | gzip > ${fn}.${featureType}.fa.gz
+ cat files.txt | xargs cat | seqkit sort -N | gzip > ${fn}.${featureType}.fa.gz
  """
 }
 
